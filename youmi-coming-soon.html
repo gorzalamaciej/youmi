@@ -363,7 +363,7 @@
 
         <!-- Email signup -->
         <form class="notify-form" id="notifyForm">
-            <input type="email" placeholder="Twój adres email" required>
+            <input type="email" name="email" placeholder="Twój adres email" required>
             <button type="submit">Powiadom mnie</button>
         </form>
 
@@ -426,12 +426,23 @@
         </p>
     </div>
 
+    <!-- External Scripts for Klaviyo -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
+
     <script>
-        document.getElementById('notifyForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            // Tu można dodać integrację z Mailchimp, ConvertKit itp.
-            this.classList.add('success');
+        // Klaviyo Integration
+        KlaviyoSubscribe.attachToForms('#notifyForm', {
+            hide_form_on_success: false, // We handle UI manually via CSS class
+            list: 'SnXF3H', // PLACEHOLDER
+            extra_fields: ['$source'],
+            custom_success_message: true, // Prevent default alert
+            success: function ($form) {
+                // Add success class to trigger CSS animations
+                $('#notifyForm').addClass('success');
+            }
         });
+
 
         // --- Dynamic Interactions Script ---
 
