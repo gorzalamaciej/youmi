@@ -135,10 +135,16 @@
         /* Email form */
         .notify-form {
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            gap: 16px;
             max-width: 450px;
             margin: 0 auto 30px;
             animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
         }
 
         .notify-form input[type="email"] {
@@ -290,11 +296,11 @@
                 font-size: 1rem;
             }
 
-            .notify-form {
+            .form-row {
                 flex-direction: column;
             }
 
-            .notify-form button {
+            .form-row button {
                 width: 100%;
             }
 
@@ -318,9 +324,43 @@
             }
         }
 
+        /* Checkbox RODO */
+        .consent-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .consent-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: var(--peachy-coral);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .consent-wrapper label {
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .consent-wrapper label a {
+            color: var(--peachy-coral);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .consent-wrapper label a:hover {
+            text-decoration: underline;
+        }
+
         /* Success state */
-        .notify-form.success input,
-        .notify-form.success button {
+        .notify-form.success .form-row,
+        .notify-form.success .consent-wrapper {
             display: none;
         }
 
@@ -370,8 +410,17 @@
         <!-- Email signup -->
         <form class="notify-form" id="notifyForm">
             <input type="hidden" name="$source" value="Coming Soon">
-            <input type="email" name="email" placeholder="Twój adres email" required>
-            <button type="submit">Powiadom mnie</button>
+            <div class="form-row">
+                <input type="email" name="email" placeholder="Twój adres email" required>
+                <button type="submit">Powiadom mnie</button>
+            </div>
+            <div class="consent-wrapper">
+                <input type="checkbox" id="consent" name="consent" required>
+                <label for="consent">
+                    Wyrażam zgodę na przetwarzanie moich danych osobowych w celu otrzymywania informacji marketingowych.
+                    Zapoznałem/am się z <a href="polityka-prywatnosci.html" target="_blank">Polityką prywatności</a>.
+                </label>
+            </div>
         </form>
 
         <!-- Features -->
@@ -429,7 +478,8 @@
 
         <!-- Footer -->
         <p class="footer">
-            © 2026 Youmi. Made with love ❤️
+            © 2026 Youmi. Made with love ❤️<br>
+            <a href="polityka-prywatnosci.html">Polityka prywatności</a>
         </p>
     </div>
 
