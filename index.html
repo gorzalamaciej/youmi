@@ -363,6 +363,7 @@
 
         <!-- Email signup -->
         <form class="notify-form" id="notifyForm">
+            <input type="hidden" name="$source" value="Coming Soon">
             <input type="email" name="email" placeholder="Twój adres email" required>
             <button type="submit">Powiadom mnie</button>
         </form>
@@ -426,39 +427,37 @@
         </p>
     </div>
 
-    <!-- External Scripts for Klaviyo -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
 
     <script>
-        // Klaviyo Integration
-        KlaviyoSubscribe.attachToForms('#notifyForm', {
-            hide_form_on_success: false, // We handle UI manually via CSS class
-            list: 'SnXF3H', // PLACEHOLDER
-            extra_fields: ['$source'],
-            custom_success_message: true, // Prevent default alert
-            success: function ($form) {
-                // Add success class to trigger CSS animations
+        $('#notifyForm').on('submit', function (e) {
+            e.preventDefault();
+
+            var email = $(this).find('input[name="email"]').val();
+            var listId = 'SnXF3H';
+
+            KlaviyoSubscribe.subscribe(
+                listId,
+                email,
+                {
+                    '$source': 'Coming Soon Page'
+                }
+            ).then(function () {
                 $('#notifyForm').addClass('success');
-            }
+            });
         });
-
-
-        // --- Dynamic Interactions Script ---
 
         const blobs = document.querySelectorAll('.blob');
 
-        // Mouse position state
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
 
-        // Update mouse position on move
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
         });
 
-        // Update dimensions on resize
         let winW = window.innerWidth;
         let winH = window.innerHeight;
         window.addEventListener('resize', () => {
@@ -466,36 +465,26 @@
             winH = window.innerHeight;
         });
 
-        // Blob class to manage individual blob physics
         class Blob {
             constructor(el, speed, wanderMag) {
                 this.el = el;
-                this.speed = speed; // Lower is slower/laggier
-                this.wanderMag = wanderMag; // Magnitude of random wandering
+                this.speed = speed;
+                this.wanderMag = wanderMag;
                 this.x = Math.random() * winW;
                 this.y = Math.random() * winH;
                 this.vx = 0;
                 this.vy = 0;
-                // Random offset for wandering
                 this.wanderOffset = Math.random() * 1000;
             }
 
             update(time) {
-                // Target position typically biases towards cursor, but keeps distance
-                // We want them to float AROUND the cursor somewhat
-
-                // Calculate target based on mouse but spread out
-                // Using a unique offset for each blob so they don't stack
                 const offsetX = (this.wanderOffset % 200) - 100;
                 const targetX = mouseX + (Math.sin(time * 0.001 + this.wanderOffset) * this.wanderMag);
                 const targetY = mouseY + (Math.cos(time * 0.001 + this.wanderOffset) * this.wanderMag);
 
-                // Lerp towards target (spring-like following)
                 this.x += (targetX - this.x) * this.speed;
                 this.y += (targetY - this.y) * this.speed;
 
-                // Apply transform
-                // Centering the blob on its coordinate (blob sizes vary, simplifying to center)
                 const w = this.el.offsetWidth;
                 const h = this.el.offsetHeight;
 
@@ -503,21 +492,17 @@
             }
         }
 
-        // Initialize blobs with different characteristics
-        // Spread them out initially to avoid clumping at top-left before first frame
         blobs[0].style.transform = `translate(${winW * 0.2}px, ${winH * 0.2}px)`;
         blobs[1].style.transform = `translate(${winW * 0.8}px, ${winH * 0.6}px)`;
         blobs[2].style.transform = `translate(${winW * 0.3}px, ${winH * 0.8}px)`;
 
         const blobObjs = [
-            new Blob(blobs[0], 0.02, 300), // Slower, wider wander
-            new Blob(blobs[1], 0.035, 200), // Medium
-            new Blob(blobs[2], 0.05, 150)  // Faster, closer
+            new Blob(blobs[0], 0.02, 300),
+            new Blob(blobs[1], 0.035, 200),
+            new Blob(blobs[2], 0.05, 150)
         ];
 
-        // Animation Loop
         function animate(time) {
-            // 1. Update Blobs
             blobObjs.forEach(blob => blob.update(time));
 
             requestAnimationFrame(animate);
