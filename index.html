@@ -324,11 +324,17 @@
             display: none;
         }
 
+        .notify-form.success {
+            justify-content: center;
+        }
+
         .notify-form.success::after {
             content: '✓ Świetnie! Powiadomimy Cię o starcie.';
             color: var(--peachy-coral);
             font-weight: 700;
             font-size: 1.1rem;
+            text-align: center;
+            width: 100%;
         }
     </style>
 </head>
@@ -427,24 +433,58 @@
         </p>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
-
     <script>
-        $('#notifyForm').on('submit', function (e) {
+        document.getElementById('notifyForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            var email = $(this).find('input[name="email"]').val();
+            var form = this;
+            var email = form.querySelector('input[name="email"]').value;
             var listId = 'SnXF3H';
 
-            KlaviyoSubscribe.subscribe(
-                listId,
-                email,
-                {
-                    '$source': 'Coming Soon Page'
+            var data = {
+                data: {
+                    type: 'subscription',
+                    attributes: {
+                        custom_source: 'Coming Soon Page',
+                        profile: {
+                            data: {
+                                type: 'profile',
+                                attributes: {
+                                    email: email
+                                }
+                            }
+                        }
+                    },
+                    relationships: {
+                        list: {
+                            data: {
+                                type: 'list',
+                                id: listId
+                            }
+                        }
+                    }
                 }
-            ).then(function () {
-                $('#notifyForm').addClass('success');
+            };
+
+            fetch('https://a.klaviyo.com/client/subscriptions/?company_id=RWJTm4', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'revision': '2024-02-15'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (response.ok || response.status === 202) {
+                    form.classList.add('success');
+                } else {
+                    console.error('Klaviyo error:', response.status);
+                    alert('Wystąpił błąd. Spróbuj ponownie.');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                alert('Wystąpił błąd. Spróbuj ponownie.');
             });
         });
 
