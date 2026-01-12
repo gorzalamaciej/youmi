@@ -13,7 +13,6 @@
         :root {
             --peachy-coral: #FF7F6B;
             --peachy-light: #FFA694;
-            --peachy-dark: #E86A56;
             --cream: #FFF9F5;
             --warm-gray: #4A4A4A;
         }
@@ -64,7 +63,7 @@
         .blob-3 {
             width: 200px;
             height: 200px;
-            background: var(--peachy-dark);
+            background: var(--peachy-coral);
         }
 
         .container {
@@ -187,7 +186,7 @@
         }
 
         .notify-form button:hover {
-            background: var(--peachy-dark);
+            background: var(--peachy-coral);
             transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(255, 127, 107, 0.4);
         }
@@ -395,7 +394,7 @@
                     fill="#FF7F6B">ı</text>
                 <circle cx="134" cy="11" r="6" fill="#FF7F6B" />
                 <circle cx="142" cy="11" r="6" fill="#FF7F6B" opacity="0.6" />
-                <text x="82" y="68" font-family="Nunito, sans-serif" font-size="11" font-weight="700" fill="#E86A56"
+                <text x="82" y="68" font-family="Nunito, sans-serif" font-size="11" font-weight="700" fill="#FF7F6B"
                     text-anchor="middle">made with love</text>
             </svg>
         </div>
@@ -524,18 +523,18 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(function(response) {
-                if (response.ok || response.status === 202) {
-                    form.classList.add('success');
-                } else {
-                    console.error('Klaviyo error:', response.status);
+                .then(function (response) {
+                    if (response.ok || response.status === 202) {
+                        form.classList.add('success');
+                    } else {
+                        console.error('Klaviyo error:', response.status);
+                        alert('Wystąpił błąd. Spróbuj ponownie.');
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
                     alert('Wystąpił błąd. Spróbuj ponownie.');
-                }
-            })
-            .catch(function(error) {
-                console.error('Error:', error);
-                alert('Wystąpił błąd. Spróbuj ponownie.');
-            });
+                });
         });
 
         const blobs = document.querySelectorAll('.blob');
